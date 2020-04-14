@@ -22,11 +22,22 @@ public class InsurancePlanCtl {
 	@Autowired
 	private InsurancePlanService insurancePlanService;
 
+	/**
+	 * Method to get all active health plans
+	 * 
+	 * @return
+	 */
 	@GetMapping("/plan/getAll")
 	public List<InsurancePlan> getAllActivePlans() {
 		return insurancePlanService.getAllPlans(1);
 	}
 
+	/**
+	 * Method to delete(deactivate) the health plan
+	 * 
+	 * @param planId
+	 * @return
+	 */
 	@DeleteMapping("/plan/delete/{id}")
 	public String deactivatePlan(@PathVariable("id") int planId) {
 		try {
@@ -47,6 +58,12 @@ public class InsurancePlanCtl {
 		}
 	}
 
+	/**
+	 * Method to add/register new health plan
+	 * 
+	 * @param insurancePlan
+	 * @return
+	 */
 	@PostMapping("/plan/add")
 	public String addPolicyPlan(@RequestBody InsurancePlan insurancePlan) {
 		InsurancePlan result = insurancePlanService.addPolicyPlans(insurancePlan);
@@ -57,6 +74,12 @@ public class InsurancePlanCtl {
 		}
 	}
 
+	/**
+	 * Method to update the existing health plan
+	 * 
+	 * @param insurancePlan
+	 * @return
+	 */
 	@PutMapping("/plan/update")
 	public String updatePolicyPlan(@RequestBody InsurancePlan insurancePlan) {
 		try {
