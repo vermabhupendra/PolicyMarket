@@ -1,15 +1,15 @@
-package com.example.demo.config;
+package com.synechron.policymarket.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.example.demo.model.InsurancePlan;
+import com.synechron.policymarket.model.InsurancePlan;
 
 @Configuration
 public class WebConfig {
 
 	@Bean
-	public InsurancePlan user() {
+	public InsurancePlan insurancePlan() {
 		return new InsurancePlan();
 	}
 }

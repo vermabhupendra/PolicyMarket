@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.synechron.policymarket.model;
 
 import java.io.Serializable;
 
