@@ -30,7 +30,7 @@ public class InsurancePlanService {
 	}
 
 	public InsurancePlan addHealthPlan(InsurancePlan insurancePlan) {
-		return insurancePlanRepo.save(insurancePlan);
+		return insurancePlanRepo.saveAndFlush(insurancePlan);
 	}
 
 	public InsurancePlan updateHealthPlan(InsurancePlan insurancePlan) {
