@@ -25,8 +25,8 @@ public class InsurancePlanService {
 		return insurancePlanRepo.findByIsActive(isActive);
 	}
 
-	public List<InsurancePlan> getPlansByAgeAndCity(InsurancePlan insurancePlan) {
-		return insurancePlanRepo.findByAgeAndCity(insurancePlan.getAge(), insurancePlan.getCity());
+	public List<InsurancePlan> getPlansByAgeAndCity(int age, String city) {
+		return insurancePlanRepo.findByAgeAndCity(age, city);
 	}
 
 	public InsurancePlan addHealthPlan(InsurancePlan insurancePlan) {

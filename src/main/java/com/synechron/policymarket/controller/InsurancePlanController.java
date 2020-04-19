@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.synechron.policymarket.constants.Constants;
+import com.synechron.policymarket.exceptions.HealthPlanNotFoundException;
 import com.synechron.policymarket.model.InsurancePlan;
 import com.synechron.policymarket.restutil.Response;
 import com.synechron.policymarket.service.InsurancePlanService;
@@ -48,12 +50,14 @@ public class InsurancePlanController {
 	/**
 	 * Method to get Plans on the basis of Age and City
 	 * 
-	 * @param insurancePlan
+	 * @param age
+	 * @param city
 	 * @return
 	 */
-	@PostMapping("/plan/getPlansByAgeAndCity")
-	public ResponseEntity<Response> getPlansByAgeAndCity(@Valid @RequestBody InsurancePlan insurancePlan) {
-		List<InsurancePlan> listOfPlansByAgeAndCity = insurancePlanService.getPlansByAgeAndCity(insurancePlan);
+	@PostMapping("/plan/getAllPlansByAgeAndCity")
+	public ResponseEntity<Response> getPlansByAgeAndCity(@RequestParam(value = "age", required = true) int age,
+			@RequestParam(value = "city", required = true) String city) {
+		List<InsurancePlan> listOfPlansByAgeAndCity = insurancePlanService.getPlansByAgeAndCity(age, city);
 
 		if (listOfPlansByAgeAndCity.size() != 0) {
 			return new ResponseEntity<Response>(
@@ -86,30 +90,20 @@ public class InsurancePlanController {
 	 * 
 	 * @param insurancePlan
 	 * @return
+	 * @throws HealthPlanNotFoundException
 	 */
 	@PutMapping("/plan/update")
-	public ResponseEntity<Response> updateHealthPlan(@RequestBody InsurancePlan insurancePlan) {
-		try {
-			InsurancePlan plan = insurancePlanService.checkForHealthPlan(insurancePlan.getPlanId());
-			log.debug("Plan = " + plan);
-			if (plan != null) {
-				InsurancePlan result = insurancePlanService.updateHealthPlan(insurancePlan);
-				if (result.getPlanId() != 0) {
-					return new ResponseEntity<Response>(new Response("Health Plan Updated Successfully", null),
-							HttpStatus.OK);
-				} else {
-					return new ResponseEntity<Response>(new Response("Failed, Please try again.", null),
-							HttpStatus.BAD_REQUEST);
-				}
-			} else {
-				return new ResponseEntity<Response>(
-						new Response("Health plan you are trying to update does not exists", null),
-						HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<Response>(
-					new Response("Health plan you are trying to update does not exists", null), HttpStatus.NOT_FOUND);
+	public ResponseEntity<Response> updateHealthPlan(@Valid @RequestBody InsurancePlan insurancePlan)
+			throws HealthPlanNotFoundException {
+
+		InsurancePlan plan = insurancePlanService.checkForHealthPlan(insurancePlan.getPlanId());
+		log.debug("Plan = " + plan);
+
+		if (plan == null) {
+			throw new HealthPlanNotFoundException("Health plan does not exists.");
 		}
+		insurancePlanService.updateHealthPlan(insurancePlan);
+		return new ResponseEntity<Response>(new Response("Health Plan Updated Successfully", null), HttpStatus.OK);
 	}
 
 	/**
@@ -117,28 +111,15 @@ public class InsurancePlanController {
 	 * 
 	 * @param planId
 	 * @return
+	 * @throws HealthPlanNotFoundException
 	 */
 	@DeleteMapping("/plan/delete/{id}")
-	public ResponseEntity<Response> deactivatePlan(@PathVariable("id") int planId) {
-		try {
-			InsurancePlan planObj = insurancePlanService.checkForHealthPlan(planId);
-			if (planObj != null) {
-				int result = insurancePlanService.deactivatePlan(Constants.DEACTIVE, planId);
-				if (result > 0) {
-					return new ResponseEntity<Response>(new Response("Health plan deleted successfully", null),
-							HttpStatus.OK);
-				} else {
-					return new ResponseEntity<Response>(new Response("Failed, Please try again.", null),
-							HttpStatus.BAD_REQUEST);
-				}
-			} else {
-				return new ResponseEntity<Response>(
-						new Response("Health plan you are trying to delete does not exists", null),
-						HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<Response>(
-					new Response("Health plan you are trying to delete does not exists", null), HttpStatus.NOT_FOUND);
+	public ResponseEntity<Response> deactivatePlan(@PathVariable("id") int planId) throws HealthPlanNotFoundException {
+		InsurancePlan planObj = insurancePlanService.checkForHealthPlan(planId);
+		if (planObj == null) {
+			throw new HealthPlanNotFoundException("Health plan you are trying to delete does not exists.");
 		}
+		insurancePlanService.deactivatePlan(Constants.DEACTIVE, planId);
+		return new ResponseEntity<Response>(new Response("Health plan deleted successfully", null), HttpStatus.OK);
 	}
 }
