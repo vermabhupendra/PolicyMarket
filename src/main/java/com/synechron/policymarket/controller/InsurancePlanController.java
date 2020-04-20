@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class InsurancePlanController {
 	 * 
 	 * @return
 	 */
+	@CrossOrigin(origins = "http://localhost:8095")
 	@GetMapping("/plan/getAll")
 	public ResponseEntity<Response> getAllActivePlans() {
 		List<InsurancePlan> listOfAllActivePlans = insurancePlanService.getAllActivePlans(Constants.ACTIVE);
@@ -95,12 +97,11 @@ public class InsurancePlanController {
 	@PutMapping("/plan/update")
 	public ResponseEntity<Response> updateHealthPlan(@Valid @RequestBody InsurancePlan insurancePlan)
 			throws HealthPlanNotFoundException {
-
 		InsurancePlan plan = insurancePlanService.checkForHealthPlan(insurancePlan.getPlanId());
 		log.debug("Plan = " + plan);
 
 		if (plan == null) {
-			throw new HealthPlanNotFoundException("Health plan does not exists.");
+			throw new HealthPlanNotFoundException("Health plan you are trying to update does not exists.");
 		}
 		insurancePlanService.updateHealthPlan(insurancePlan);
 		return new ResponseEntity<Response>(new Response("Health Plan Updated Successfully", null), HttpStatus.OK);

@@ -3,7 +3,6 @@ package com.synechron.policymarket.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +41,10 @@ public class InsurancePlanService {
 		return insurancePlanRepo.deactivatePlan(status, planId);
 	}
 
-	public InsurancePlan checkForHealthPlan(int planId) throws EntityNotFoundException {
+	public InsurancePlan checkForHealthPlan(int planId) {
 		log.debug("Plan id:" + planId);
-		return insurancePlanRepo.getOne(planId);
+		Optional<InsurancePlan> planObj = insurancePlanRepo.findById(planId);
+		return planObj.isPresent() ? planObj.get() : null;
+
 	}
 }
