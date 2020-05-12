@@ -39,14 +39,16 @@ public class InsurancePlanController {
 	 */
 	@CrossOrigin(origins = "http://localhost:8095")
 	@GetMapping("/plan/getAll")
-	public ResponseEntity<Response> getAllActivePlans() {
-		List<InsurancePlan> listOfAllActivePlans = insurancePlanService.getAllActivePlans(Constants.ACTIVE);
-		if (listOfAllActivePlans.size() != 0) {
-			return new ResponseEntity<Response>(new Response("All active health plan list", listOfAllActivePlans),
-					HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Response>(new Response("No health plans found.", null), HttpStatus.NOT_FOUND);
-		}
+	public List<InsurancePlan> getAllActivePlans() {
+		return insurancePlanService.getAllActivePlans(Constants.ACTIVE);
+
+//		List<InsurancePlan> listOfAllActivePlans = insurancePlanService.getAllActivePlans(Constants.ACTIVE);
+//		if (listOfAllActivePlans.size() != 0) {
+//			return new ResponseEntity<Response>(new Response("All active health plan list", listOfAllActivePlans),
+//					HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<Response>(new Response("No health plans found.", null), HttpStatus.NOT_FOUND);
+//		}
 	}
 
 	/**

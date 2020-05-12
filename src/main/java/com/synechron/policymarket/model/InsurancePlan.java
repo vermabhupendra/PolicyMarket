@@ -1,7 +1,5 @@
 package com.synechron.policymarket.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,12 +22,7 @@ import lombok.NoArgsConstructor;
 @Component
 @NoArgsConstructor
 @Data
-public class InsurancePlan implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class InsurancePlan {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,18 +33,21 @@ public class InsurancePlan implements Serializable {
 	@NotNull(message = "Plan name must not be null.")
 	private String planName;
 
-	@NotBlank(message = "Company name must not be empty.")
-	@Size(min = 2, message = "Company name should be at least 2 character long.")
-	@NotNull(message = "Company name must not be null.")
-	private String companyName;
+	@NotBlank(message = "Insurance Provider name must not be empty.")
+	@Size(min = 2, message = "Insurance Provider name should be at least 2 character long.")
+	@NotNull(message = "Insurance Provider name must not be null.")
+	private String providerName;
+
+	@NotBlank(message = "Plan type must not be empty.")
+	@Size(min = 2, message = "Plan type should be at least 2 character long.")
+	@NotNull(message = "Plan type must not be null.")
+	private String planType;
 
 	@Min(value = 1)
 	private double planAmount;
 
 	@Min(value = 10_000)
 	private double planCover;
-
-	private int cashlessHospitals;
 
 	@Min(value = 5)
 	private int age;
@@ -61,14 +57,5 @@ public class InsurancePlan implements Serializable {
 	@NotNull(message = "City name must not be null.")
 	private String city;
 
-	private double premiumScore;
-
-	private double claimSettlementRationScore;
-
-	private double planBenefitsScore;
-
-	private double finalPlanScore;
-
 	private int isActive;
-
 }
